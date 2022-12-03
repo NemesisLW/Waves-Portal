@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  background-image: radial-gradient(circle, #000000, #060404, #0d0708, #120b0b, #160e0e, #1b1010, #201113, #241216, #29121e, #2a142a, #231938, #0d2045);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -10,4 +11,8 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.root {
+  
 }

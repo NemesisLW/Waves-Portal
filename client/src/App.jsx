@@ -28,6 +28,13 @@ const App = () => {
     }
     console.log("We have the ethereum object", ethereum);
     const accounts = await ethereum.request({method: "eth_accounts"});
+    let chainId = await ethereum.request({ method: 'eth_chainId' });
+      console.log("Connected to chain " + chainId);
+      
+      const goerliChainId = "0x5"; 
+      if (chainId !== goerliChainId) {
+      	alert("You are not connected to the Goerli Test Network!");
+      }
 
     if (accounts.length !== 0) {
       const account = accounts[0];
@@ -217,13 +224,16 @@ const App = () => {
         
         <div>
         {currentAccount && 
-          (<textarea name="message"
+          (<div className="prompt-container">
+            <textarea className="prompt-box"
+              name="message"
                      rows="10"
                      cols="70"
                      placeholder="Please state how I made you feel bad..."
                      value={waverMessage}
                      type="text"
                      onChange={e => setWaverMessage(e.target.value)}/>
+            </div>
           )}
         </div>
         
@@ -242,10 +252,10 @@ const App = () => {
           </button>)}
 
         <h1> Grievance Log </h1>
-        {allWaves.map((wave, index) => {
+        {allWaves.slice(0).reverse().map((wave, index) => {
           return (
             <div className="messageContainer" key={index} style={
-            { backgroundColor: "OldLace", marginTop: "16px", padding: "8px" }}>
+            { marginTop: "16px", padding: "8px" }}>
               <div>Address: {wave.address}</div>
               <div>Time: {wave.timestamp.toString()}</div>
               <div>Message: {wave.message}</div>

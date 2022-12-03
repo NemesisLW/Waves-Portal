@@ -3,6 +3,9 @@
   justify-content: center;
   width: 100%;
   margin-top: 64px;
+  color: #FFF;
+  font-family: 'Manrope', sans-serif;
+  
 }
 
 .dataContainer {
@@ -23,15 +26,75 @@
 }
 
 .header {
-  text-align: center;
-  font-size: 32px;
-  font-weight: 600;
+    width: 100%;
+    font-weight: 700;
+    font-size: 42px;
+    letter-spacing: 1px;
+    line-height: 1.2em;
+    text-align: center;
+    margin: 0;
 }
 
 .bio {
   text-align: center;
-  color: gray;
+  color: #c7c7c7;
   margin-top: 16px;
+}
+
+.prompt-container {
+    place-content: flex-end center;
+    align-items: center;
+    display: flex;
+    flex: 0 0 auto;
+    flex-flow: column nowrap;
+    gap: 16px;
+    height: min-content;
+    padding: 0px;
+    width: min-content;
+}
+
+.prompt-box {
+    border-bottom-width: 1px;
+    border-color: rgba(255, 255, 255, 0.1);
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-style: solid;
+    border-top-width: 1px;
+    place-content: flex-start;
+    align-items: flex-start;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    display: flex;
+    flex: 0 0 auto;
+    flex-flow: column nowrap;
+    gap: 10px;
+    height: 150px;
+    overflow: hidden;
+    padding: 20px;
+    position: relative;
+    width: 610px;
+    max-width: 1200px;
+    will-change: transform;
+    overflow: auto;
+    outline: none;
+    resize: none;
+    font-size: 16px;
+    font-style: normal;
+    letter-spacing: 0px;
+    line-height: 1.6em;
+    text-align: start;
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    text-transform: none;
+}
+
+textarea {
+    font-family: 'Manrope', sans-serif;
+}
+
+
+.prompt-box:focus {
+    border-color:rgba(255, 255, 255, 0.75)
 }
 
 .waveButton {
