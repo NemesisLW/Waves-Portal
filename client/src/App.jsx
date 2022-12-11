@@ -275,6 +275,7 @@ const App = () => {
   return (
     <div className="mainContainer">
       <div className="dataContainer">
+        { currentAccount ? <p className="wallet"> Wallet: {currentAccount.slice(0, 6)}...{currentAccount.slice(-4)} </p> : <p className="wallet"> Not connected </p> }
         <div className="header">
           Hey there!
         </div>
