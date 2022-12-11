@@ -16,7 +16,6 @@ const App = () => {
   const [waverMessage, setWaverMessage] = useState("");
   const [network, setNetwork] = useState('');
   const [loading, setLoading] = useState(false);
-  const [txnHashing, setTH] = useState(false);
 
   const contractAddress ="0x62a0d870D919227ec46c36E1235e4103835BE4eF"; 
   const contractABI = abi.abi;
