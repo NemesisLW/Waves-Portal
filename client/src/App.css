@@ -17,6 +17,14 @@
   align-items: center;
 }
 
+.wallet {
+  border-radius: 68px;
+  padding: 12px 20px;
+  background: linear-gradient(145deg, #653232, #783c3c);
+  box-shadow:  31px 31px 63px #5e2f2f,
+               -31px -31px 63px #824141;
+}
+
 .messageContainer {
   display: flex;
   flex-direction: column;
