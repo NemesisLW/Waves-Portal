@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import './App.css';
 import abi from "./utils/WavePortal.json";
 import { networks } from './utils/networks';
-// import {BounceLoader} from "react-spinners";
+import { Player } from '@lottiefiles/react-lottie-player';
 
 
 const getEthereumObject = () => window.ethereum;
@@ -15,7 +15,8 @@ const App = () => {
   const [allWaves, setAllWaves] = useState([]);
   const [waverMessage, setWaverMessage] = useState("");
   const [network, setNetwork] = useState('');
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [txnHashing, setTH] = useState(false);
 
   const contractAddress ="0x62a0d870D919227ec46c36E1235e4103835BE4eF"; 
   const contractABI = abi.abi;
@@ -214,7 +215,7 @@ const App = () => {
           console.log("Retrieved total wave count...", count.toNumber());
           
           const waveTxn = await wavePortalContract.wave(waverMessage,{ gasLimit: 300000 });
-          
+          setLoading(true);
           console.log("Mining...", waveTxn.hash);
           await waveTxn.wait();
           console.log("Mined -- ", waveTxn.hash);
@@ -231,7 +232,18 @@ const App = () => {
         console.error(err);
       }
     }
-  
+
+
+
+    const loadingScreen = () => (
+    <div>
+    <Player
+      autoplay
+      loop
+      src="https://assets8.lottiefiles.com/packages/lf20_nvzik8vy.json"
+      style={{ height: '150px', width: '150px' }}> </Player>
+      </div>
+  );
   
   useEffect(() => {
     
@@ -242,6 +254,7 @@ const App = () => {
 
     const onNewWave = (from, timestamp, message) => {
       console.log("NewWave", from, timestamp, message);
+      setLoading(false);
       setAllWaves(prevState => [
         ...prevState,
         {
@@ -275,7 +288,7 @@ const App = () => {
   return (
     <div className="mainContainer">
       <div className="dataContainer">
-        { currentAccount ? <p className="wallet"> Wallet: {currentAccount.slice(0, 6)}...{currentAccount.slice(-4)} </p> : <p className="wallet"> Not connected </p> }
+         { currentAccount ? <p className="wallet"> Wallet: {currentAccount.slice(0, 6)}...{currentAccount.slice(-4)} </p> : <p className="wallet"> Not connected </p> }
         <div className="header">
           Hey there!
         </div>
@@ -285,10 +298,9 @@ const App = () => {
 
         <div className="bio">
           Help me become a better person.
-          {/* {loading ? <h2><BounceLoader size={45} color="#454545"/></h2> : <p></p>} */}
           {currentAccount && <h3>Total Wave Count : {waveCount}</h3>}
         </div>
-        
+        {!loading ?
         <div>
         {currentAccount && 
           (<div className="prompt-container">
@@ -302,23 +314,25 @@ const App = () => {
                      onChange={e => setWaverMessage(e.target.value)}/>
             </div>
           )}
-        </div>
+        </div> : loadingScreen()}
 
-          {renderWaveButton()}
+          {!loading ? renderWaveButton() : null}
         
-          <button className="waveButton" onClick={wave}>
+          {!loading ?  <button className="waveButton" onClick={wave}>
             Wave at Me
-          </button>
+          </button> : null}
           
-        {!currentAccount && (
+        {!loading ? !currentAccount && (
           <button className="waveButton" onClick={connectWallet}>
             Connect Wallet
-          </button>)}
+          </button>) : null}
 
-        {currentAccount && (
+        {!loading ? currentAccount && (
           <button className="waveButton" onClick={disconnectWallet}>
             Disconnect Wallet
-          </button>)}
+          </button>) : null}
+
+        
 
         <h1> Grievance Log </h1>
         {allWaves.slice(0).reverse().map((wave, index) => {
