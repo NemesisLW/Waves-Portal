@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import { ethers } from "ethers";
 import './App.css';
 import abi from "./utils/WavePortal.json";
+import { networks } from './utils/networks';
 // import {BounceLoader} from "react-spinners";
 
 
@@ -13,6 +14,7 @@ const App = () => {
   const [waveCount, setWaveCount] = useState(0);
   const [allWaves, setAllWaves] = useState([]);
   const [waverMessage, setWaverMessage] = useState("");
+  const [network, setNetwork] = useState('');
   // const [loading, setLoading] = useState(false);
 
   const contractAddress ="0x62a0d870D919227ec46c36E1235e4103835BE4eF"; 
@@ -30,8 +32,17 @@ const App = () => {
     const accounts = await ethereum.request({method: "eth_accounts"});
     let chainId = await ethereum.request({ method: 'eth_chainId' });
       console.log("Connected to chain " + chainId);
-      
+      setNetwork(networks[chainId]);
+    
       const goerliChainId = "0x5"; 
+
+      ethereum.on('chainChanged', handleChainChanged);
+      
+      // Reload the page when they change networks
+        function handleChainChanged(_chainId) {
+          window.location.reload();
+        }
+    
       if (chainId !== goerliChainId) {
       	alert("You are not connected to the Goerli Test Network!");
       }
@@ -51,6 +62,62 @@ const App = () => {
   }
 };
 
+
+  const switchNetwork = async () => {
+    if (window.ethereum) {
+      try {
+        // Try to switch to the Mumbai testnet
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: '0x5' }], // Check networks.js for hexadecimal network ids
+        });
+      } catch (error) {
+        // This error code means that the chain we want has not been added to MetaMask
+        // In this case we ask the user to add it to their MetaMask
+        if (error.code === 4902) {
+          try {
+            await window.ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [
+                {	
+                  chainId: '0x5',
+                  chainName: 'Goerli test network',
+                  rpcUrls: ['https://goerli.infura.io/v3/'],
+                  nativeCurrency: {
+                      name: "Goerli Ethereum",
+                      symbol: "GoerliETH",
+                      decimals: 18
+                  },
+                  blockExplorerUrls: ["https://goerli.etherscan.io"]
+                },
+              ],
+            });
+          } catch (error) {
+            console.log(error);
+          }
+        }
+        console.log(error);
+      }
+    } else {
+      // If window.ethereum is not found then MetaMask is not installed
+      alert('MetaMask is not installed. Please install it to use this app: https://metamask.io/download.html');
+    } 
+}
+
+  const renderWaveButton = () => {
+
+    console.log(network);
+
+    if (network !== 'Goerli') {
+    return (
+      <div className="connect-wallet-container">
+        <button className="waveButton" onClick={switchNetwork}>Please Connect to Goerli Testnet</button>
+      </div>
+    );
+    }
+    
+    
+  }
   
   const getAllWaves = async () => {
     try {
@@ -70,7 +137,6 @@ const App = () => {
             message: wave.message
           });
         });
-
         setAllWaves(cleanedWaves);
         
       } else {
@@ -128,6 +194,9 @@ const App = () => {
   }
 
   const wave = async () => {
+    if (network !== 'Goerli') {
+      alert("Switch to Goerli Network to wave :)")
+    } 
      
     try {
         const { ethereum } = window;
@@ -164,12 +233,9 @@ const App = () => {
     }
   
   
-  useEffect(async () => {
-    const account = await checkIfWalletConnected();
-    if (account !== null) {
-      setCurrentAccount(account);
-    }
+  useEffect(() => {
     
+    checkIfWalletConnected();
     getWaveCount();
 
     let wavePortalContract;
@@ -236,6 +302,8 @@ const App = () => {
             </div>
           )}
         </div>
+
+          {renderWaveButton()}
         
           <button className="waveButton" onClick={wave}>
             Wave at Me
